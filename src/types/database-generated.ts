@@ -23,6 +23,7 @@ export interface Database {
           nome_cientifico: string
           genero: string
           id_subordem: number
+          url_imagem: string | null
         }
         Insert: {
           id_animal?: number
@@ -30,6 +31,7 @@ export interface Database {
           nome_cientifico: string
           genero: string
           id_subordem: number
+          url_imagem?: string | null
         }
         Update: {
           id_animal?: number
@@ -37,6 +39,7 @@ export interface Database {
           nome_cientifico?: string
           genero?: string
           id_subordem?: number
+          url_imagem?: string | null
         }
       }
       caracteristicas: {

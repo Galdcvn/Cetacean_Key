@@ -21,6 +21,7 @@ export function useFilteredAnimais(
           nome_cientifico,
           genero,
           id_subordem,
+          url_imagem,
           subordens (
             id_subordem,
             nome

@@ -16,8 +16,12 @@ CREATE TABLE animais (
     nome_cientifico VARCHAR(100) UNIQUE NOT NULL,
     genero VARCHAR(100) NOT NULL,
     id_subordem INT NOT NULL,
+    url_imagem TEXT,
     FOREIGN KEY (id_subordem) REFERENCES subordens(id_subordem)
 );
+
+-- Para banco existente, rode:
+-- ALTER TABLE animais ADD COLUMN url_imagem TEXT;
 
 -- 3. Tabela com as perguntas da chave
 CREATE TABLE caracteristicas (

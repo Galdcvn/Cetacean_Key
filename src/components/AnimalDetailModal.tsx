@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { AnimalComCaracteristicas } from '../types/cetacean'
 import styles from './AnimalDetailModal.module.css'
 
@@ -9,8 +9,10 @@ interface AnimalDetailModalProps {
 }
 
 export function AnimalDetailModal({ animal, selectedOptions, onClose }: AnimalDetailModalProps) {
+  const [imgError, setImgError] = useState(false)
   const selectedSet = new Set(selectedOptions)
   const hasFilters = selectedOptions.length > 0
+  const hasImage = animal.url_imagem && !imgError
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -49,6 +51,14 @@ export function AnimalDetailModal({ animal, selectedOptions, onClose }: AnimalDe
         </button>
 
         <div className={styles.header}>
+          {hasImage && (
+            <img
+              className={styles.headerImage}
+              src={animal.url_imagem!}
+              alt={animal.nome_comum}
+              onError={() => setImgError(true)}
+            />
+          )}
           <h2 className={styles.commonName}>{animal.nome_comum}</h2>
           <p className={styles.scientificName}>{animal.nome_cientifico}</p>
           <div className={styles.meta}>

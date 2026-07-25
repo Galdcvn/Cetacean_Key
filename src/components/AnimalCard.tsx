@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { AnimalComCaracteristicas } from '../types/cetacean'
 import styles from './AnimalCard.module.css'
 
@@ -9,24 +10,36 @@ interface AnimalCardProps {
 }
 
 export function AnimalCard({ animal, selectedOptions, onSelect, style }: AnimalCardProps) {
+  const [imgError, setImgError] = useState(false)
   const opcoes = animal.animal_identificacao
     .map((ai) => ai.opcoes_caracteristica)
     .filter(Boolean)
 
   const selectedSet = new Set(selectedOptions)
   const hasFilters = selectedOptions.length > 0
+  const hasImage = animal.url_imagem && !imgError
 
   return (
     <div className={styles.card} onClick={onSelect} role="button" tabIndex={0} style={style}>
       <div className={styles.imageContainer}>
-        <div className={styles.placeholder}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
-            <path d="M8 14s1.5 2 4 2 4-2 4-2" />
-            <circle cx="9" cy="9" r="1" fill="currentColor" />
-            <circle cx="15" cy="9" r="1" fill="currentColor" />
-          </svg>
-        </div>
+        {hasImage ? (
+          <img
+            className={styles.image}
+            src={animal.url_imagem!}
+            alt={animal.nome_comum}
+            loading="lazy"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <div className={styles.placeholder}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
+              <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+              <circle cx="9" cy="9" r="1" fill="currentColor" />
+              <circle cx="15" cy="9" r="1" fill="currentColor" />
+            </svg>
+          </div>
+        )}
       </div>
 
       <div className={styles.content}>

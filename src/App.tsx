@@ -6,6 +6,7 @@ import { AnimalDetailModal } from './components/AnimalDetailModal'
 import { useFiltros } from './hooks/useFiltros'
 import { useCaracteristicas } from './hooks/useCaracteristicas'
 import { useFilteredAnimais } from './hooks/useFilteredAnimais'
+import { useTheme } from './hooks/useTheme'
 import type { AnimalComCaracteristicas } from './types/cetacean'
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
   const [selectedAnimal, setSelectedAnimal] = useState<AnimalComCaracteristicas | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
 
+  const { theme, toggleTheme } = useTheme()
   const { selectedOptions, toggleOption, resetFilters } = useFiltros()
   const { caracteristicas, loading: loadingCaract } = useCaracteristicas()
   const { results, loading: loadingAnimals, error, totalCount } = useFilteredAnimais(
@@ -22,7 +24,12 @@ function App() {
 
   return (
     <div className="app">
-      <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+      <Header
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+      />
 
       <main className="main">
         <section className="filtros">
