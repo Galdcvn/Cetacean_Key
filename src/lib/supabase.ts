@@ -10,4 +10,14 @@ if (!supabaseUrl || !supabaseAnonKey) {
   )
 }
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
+const globalForSupabase = globalThis as unknown as {
+  __supabaseClient: ReturnType<typeof createClient<Database>> | undefined
+}
+
+export const supabase =
+  globalForSupabase.__supabaseClient ??
+  createClient<Database>(supabaseUrl, supabaseAnonKey)
+
+if (!globalForSupabase.__supabaseClient) {
+  globalForSupabase.__supabaseClient = supabase
+}
