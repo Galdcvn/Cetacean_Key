@@ -2,45 +2,92 @@
 export interface Database {
   public: {
     Tables: {
-      cetaceans: {
+      subordens: {
         Row: {
-          id: string
-          especie: string
-          popularNome: string
-          genero: string
-          subordem: string
-          tipoAgua: string
-          barbatanasDorsais: boolean
-          tamMaximo: number
-          conservacao: string
-          imagemUrl: string | null
-          created_at: string
+          id_subordem: number
+          nome: string
         }
         Insert: {
-          id?: string
-          especie: string
-          popularNome: string
-          genero: string
-          subordem: string
-          tipoAgua: string
-          barbatanasDorsais: boolean
-          tamMaximo: number
-          conservacao: string
-          imagemUrl?: string | null
-          created_at?: string
+          id_subordem?: number
+          nome: string
         }
         Update: {
-          id?: string
-          especie?: string
-          popularNome?: string
+          id_subordem?: number
+          nome?: string
+        }
+      }
+      animais: {
+        Row: {
+          id_animal: number
+          nome_comum: string
+          nome_cientifico: string
+          genero: string
+          id_subordem: number
+        }
+        Insert: {
+          id_animal?: number
+          nome_comum: string
+          nome_cientifico: string
+          genero: string
+          id_subordem: number
+        }
+        Update: {
+          id_animal?: number
+          nome_comum?: string
+          nome_cientifico?: string
           genero?: string
-          subordem?: string
-          tipoAgua?: string
-          barbatanasDorsais?: boolean
-          tamMaximo?: number
-          conservacao?: string
-          imagemUrl?: string | null
-          created_at?: string
+          id_subordem?: number
+        }
+      }
+      caracteristicas: {
+        Row: {
+          id_caract: number
+          nome: string
+          grupo_anatomico: string
+        }
+        Insert: {
+          id_caract?: number
+          nome: string
+          grupo_anatomico: string
+        }
+        Update: {
+          id_caract?: number
+          nome?: string
+          grupo_anatomico?: string
+        }
+      }
+      opcoes_caracteristica: {
+        Row: {
+          id_opcao: number
+          id_caract: number
+          valor: string
+        }
+        Insert: {
+          id_opcao?: number
+          id_caract: number
+          valor: string
+        }
+        Update: {
+          id_opcao?: number
+          id_caract?: number
+          valor?: string
+        }
+      }
+      animal_identificacao: {
+        Row: {
+          id_animal: number
+          id_opcao: number
+          observacao: string | null
+        }
+        Insert: {
+          id_animal: number
+          id_opcao: number
+          observacao?: string | null
+        }
+        Update: {
+          id_animal?: number
+          id_opcao?: number
+          observacao?: string | null
         }
       }
     }

@@ -1,32 +1,32 @@
-export type ConservationStatus =
-  | 'Seguro'
-  | 'Risco'
-  | 'Vulnerável'
-  | 'Extinto'
-  | 'Desconhecido'
+import type { Database } from './database-generated'
 
-export type WaterType = 'Salgada' | 'Doce'
+// Row types from Supabase
+export type Subordem = Database['public']['Tables']['subordens']['Row']
+export type Animal = Database['public']['Tables']['animais']['Row']
+export type Caracteristica = Database['public']['Tables']['caracteristicas']['Row']
+export type OpcaoCaracteristica = Database['public']['Tables']['opcoes_caracteristica']['Row']
+export type AnimalIdentificacao = Database['public']['Tables']['animal_identificacao']['Row']
 
-export type Suborder = 'Mysticeti' | 'Odontoceti'
+// Insert types
+export type AnimalInsert = Database['public']['Tables']['animais']['Insert']
+export type CaracteristicaInsert = Database['public']['Tables']['caracteristicas']['Insert']
+export type OpcaoCaracteristicaInsert = Database['public']['Tables']['opcoes_caracteristica']['Insert']
+export type AnimalIdentificacaoInsert = Database['public']['Tables']['animal_identificacao']['Insert']
 
-export interface Cetacean {
-  id: string
-  especie: string
-  popularNome: string
-  genero: string
-  subordem: Suborder
-  tipoAgua: WaterType
-  barbatanasDorsais: boolean
-  tamMaximo: number
-  conservacao: ConservationStatus
-  imagemUrl: string | null
-  created_at: string
+// Computed types (with JOINs)
+export interface AnimalComSubordem extends Animal {
+  subordens: Subordem
 }
 
-export interface FilterState {
-  subordem: Suborder[]
-  tipoAgua: WaterType[]
-  barbatanasDorsais: boolean | null
-  tamMaximo: [number, number]
-  conservacao: ConservationStatus[]
+export interface CaracteristicaComOpcoes extends Caracteristica {
+  opcoes_caracteristica: OpcaoCaracteristica[]
+}
+
+export interface AnimalComCaracteristicas extends AnimalComSubordem {
+  animal_identificacao: {
+    opcoes_caracteristica: OpcaoCaracteristica & {
+      caracteristicas: Caracteristica
+    }
+    observacao: string | null
+  }[]
 }

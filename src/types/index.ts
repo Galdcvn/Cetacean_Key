@@ -1,2 +1,15 @@
 export type { Database } from './database-generated'
-export type { Cetacean, ConservationStatus, WaterType, Suborder, FilterState } from './cetacean'
+export type {
+  Subordem,
+  Animal,
+  Caracteristica,
+  OpcaoCaracteristica,
+  AnimalIdentificacao,
+  AnimalInsert,
+  CaracteristicaInsert,
+  OpcaoCaracteristicaInsert,
+  AnimalIdentificacaoInsert,
+  AnimalComSubordem,
+  CaracteristicaComOpcoes,
+  AnimalComCaracteristicas,
+} from './cetacean'
