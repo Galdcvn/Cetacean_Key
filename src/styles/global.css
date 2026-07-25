@@ -1,0 +1,27 @@
+*, html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --color-primary: #306F9B;
+  --color-primary-dark: #1F4A6B;
+  --color-bg: #F5F7FA;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #D9E3ED;
+  --color-text: #0D2738;
+  --color-text-light: #5A7A94;
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
