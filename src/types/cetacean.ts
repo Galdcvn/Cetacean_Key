@@ -24,9 +24,10 @@ export interface CaracteristicaComOpcoes extends Caracteristica {
 
 export interface AnimalComCaracteristicas extends AnimalComSubordem {
   animal_identificacao: {
+    id_opcao: number
+    observacao: string | null
     opcoes_caracteristica: OpcaoCaracteristica & {
       caracteristicas: Caracteristica
     }
-    observacao: string | null
   }[]
 }

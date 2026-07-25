@@ -1,0 +1,30 @@
+.section {
+  flex: 1;
+  min-width: 0;
+}
+
+.heading {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 20px 0;
+}
+
+.count {
+  color: var(--color-primary);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.loading,
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  font-size: 15px;
+  color: var(--color-text-light);
+}

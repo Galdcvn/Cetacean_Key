@@ -1,4 +1,4 @@
-*, html {
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -24,4 +24,38 @@ body {
 
 #root {
   min-height: 100vh;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 30px 16px;
+}
+
+.filtros {
+  flex-shrink: 0;
+}
+
+.cards {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .main {
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px 16px;
+  }
 }

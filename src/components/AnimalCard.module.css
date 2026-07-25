@@ -1,0 +1,67 @@
+.card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.imageFrame {
+  width: 100px;
+  height: 100px;
+  border-radius: 14px;
+  background-color: var(--color-surface-alt);
+  overflow: hidden;
+  z-index: 1;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder {
+  width: 70%;
+  height: 70%;
+}
+
+.info {
+  flex: 1;
+  height: 100px;
+  background-color: var(--color-surface-alt);
+  border-radius: 14px;
+  padding: 12px 16px 12px 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.nome {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-text);
+  margin: 0 0 2px 0;
+}
+
+.cientifico {
+  font-size: 14px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-text-light);
+  margin: 0 0 6px 0;
+}
+
+.subordem {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-primary);
+  background-color: rgba(48, 111, 155, 0.1);
+  padding: 2px 8px;
+  border-radius: 10px;
+  width: fit-content;
+}
+
+@media (max-width: 768px) {
+  .info {
+    padding: 12px 16px 12px 116px;
+  }
+}
