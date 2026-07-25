@@ -10,15 +10,13 @@ import type { AnimalComCaracteristicas } from './types/cetacean'
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('')
-  const [subordemFilter, setSubordemFilter] = useState<number | null>(null)
   const [selectedAnimal, setSelectedAnimal] = useState<AnimalComCaracteristicas | null>(null)
 
   const { selectedOptions, toggleOption, resetFilters } = useFiltros()
   const { caracteristicas, loading: loadingCaract } = useCaracteristicas()
   const { results, loading: loadingAnimals, error, totalCount } = useFilteredAnimais(
     selectedOptions,
-    searchQuery,
-    subordemFilter
+    searchQuery
   )
 
   return (
@@ -33,8 +31,6 @@ function App() {
               selectedOptions={selectedOptions}
               onToggle={toggleOption}
               onReset={resetFilters}
-              subordemFilter={subordemFilter}
-              onSubordemChange={setSubordemFilter}
             />
           )}
         </section>

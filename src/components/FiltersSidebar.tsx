@@ -7,8 +7,6 @@ interface FiltersSidebarProps {
   selectedOptions: number[]
   onToggle: (idOpcao: number) => void
   onReset: () => void
-  subordemFilter: number | null
-  onSubordemChange: (id: number | null) => void
 }
 
 export function FiltersSidebar({
@@ -16,10 +14,8 @@ export function FiltersSidebar({
   selectedOptions,
   onToggle,
   onReset,
-  subordemFilter,
-  onSubordemChange,
 }: FiltersSidebarProps) {
-  const hasActiveFilters = selectedOptions.length > 0 || subordemFilter !== null
+  const hasActiveFilters = selectedOptions.length > 0
 
   return (
     <aside className={styles.sidebar}>
@@ -33,27 +29,6 @@ export function FiltersSidebar({
             Limpar
           </button>
         )}
-      </div>
-
-      <div className={styles.subordemToggle}>
-        <button
-          className={`${styles.subordemBtn} ${subordemFilter === null ? styles.subordemActive : ''}`}
-          onClick={() => onSubordemChange(null)}
-        >
-          Todos
-        </button>
-        <button
-          className={`${styles.subordemBtn} ${subordemFilter === 1 ? styles.subordemActive : ''}`}
-          onClick={() => onSubordemChange(1)}
-        >
-          Mysticeti
-        </button>
-        <button
-          className={`${styles.subordemBtn} ${subordemFilter === 2 ? styles.subordemActive : ''}`}
-          onClick={() => onSubordemChange(2)}
-        >
-          Odontoceti
-        </button>
       </div>
 
       <div className={styles.groups}>
