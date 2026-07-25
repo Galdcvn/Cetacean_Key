@@ -6,6 +6,10 @@ interface AnimalCardsProps {
   animals: AnimalComCaracteristicas[]
   loading: boolean
   error: string | null
+  totalCount: number
+  filteredCount: number
+  selectedOptions: number[]
+  onSelectAnimal: (animal: AnimalComCaracteristicas) => void
 }
 
 function LoadingSkeleton() {
@@ -25,7 +29,15 @@ function LoadingSkeleton() {
   )
 }
 
-export function AnimalCards({ animals, loading, error }: AnimalCardsProps) {
+export function AnimalCards({
+  animals,
+  loading,
+  error,
+  totalCount,
+  filteredCount,
+  selectedOptions,
+  onSelectAnimal,
+}: AnimalCardsProps) {
   if (loading) return <LoadingSkeleton />
 
   if (error) {
@@ -59,11 +71,27 @@ export function AnimalCards({ animals, loading, error }: AnimalCardsProps) {
     )
   }
 
+  const hasFilters = selectedOptions.length > 0
+
   return (
-    <div className={styles.grid}>
-      {animals.map((animal) => (
-        <AnimalCard key={animal.id_animal} animal={animal} />
-      ))}
-    </div>
+    <>
+      <div className={styles.resultsBar}>
+        <span className={styles.resultsCount}>
+          {hasFilters
+            ? `${filteredCount} de ${totalCount} espécies`
+            : `${totalCount} espécies`}
+        </span>
+      </div>
+      <div className={styles.grid}>
+        {animals.map((animal) => (
+          <AnimalCard
+            key={animal.id_animal}
+            animal={animal}
+            selectedOptions={selectedOptions}
+            onSelect={() => onSelectAnimal(animal)}
+          />
+        ))}
+      </div>
+    </>
   )
 }

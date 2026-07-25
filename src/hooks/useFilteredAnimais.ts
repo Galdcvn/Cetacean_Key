@@ -5,7 +5,8 @@ import { smartSearchAnimals } from '../utils/smartSearch'
 
 export function useFilteredAnimais(
   selectedOptions: number[],
-  searchQuery: string
+  searchQuery: string,
+  subordemFilter: number | null
 ) {
   const [allAnimals, setAllAnimals] = useState<AnimalComCaracteristicas[]>([])
   const [loading, setLoading] = useState(true)
@@ -53,11 +54,16 @@ export function useFilteredAnimais(
     fetchAnimals()
   }, [])
 
+  const filteredBySubordem = useMemo(() => {
+    if (subordemFilter === null) return allAnimals
+    return allAnimals.filter((a) => a.id_subordem === subordemFilter)
+  }, [allAnimals, subordemFilter])
+
   const filteredByOptions = useMemo(() => {
-    if (selectedOptions.length === 0) return allAnimals
+    if (selectedOptions.length === 0) return filteredBySubordem
 
     const selectedGroupIds = new Set<number>()
-    for (const animal of allAnimals) {
+    for (const animal of filteredBySubordem) {
       for (const link of animal.animal_identificacao) {
         const caract = link.opcoes_caracteristica?.caracteristicas
         if (caract && selectedOptions.includes(link.id_opcao)) {
@@ -66,7 +72,7 @@ export function useFilteredAnimais(
       }
     }
 
-    return allAnimals.filter((animal) => {
+    return filteredBySubordem.filter((animal) => {
       const matchedGroups = new Set<number>()
       for (const link of animal.animal_identificacao) {
         if (selectedOptions.includes(link.id_opcao)) {
@@ -76,7 +82,7 @@ export function useFilteredAnimais(
       }
       return matchedGroups.size === selectedGroupIds.size
     })
-  }, [allAnimals, selectedOptions])
+  }, [filteredBySubordem, selectedOptions])
 
   const results = useMemo(
     () => smartSearchAnimals(filteredByOptions, searchQuery),

@@ -3,15 +3,20 @@ import styles from './AnimalCard.module.css'
 
 interface AnimalCardProps {
   animal: AnimalComCaracteristicas
+  selectedOptions: number[]
+  onSelect: () => void
 }
 
-export function AnimalCard({ animal }: AnimalCardProps) {
+export function AnimalCard({ animal, selectedOptions, onSelect }: AnimalCardProps) {
   const opcoes = animal.animal_identificacao
     .map((ai) => ai.opcoes_caracteristica)
     .filter(Boolean)
 
+  const selectedSet = new Set(selectedOptions)
+  const hasFilters = selectedOptions.length > 0
+
   return (
-    <div className={styles.card}>
+    <div className={styles.card} onClick={onSelect} role="button" tabIndex={0}>
       <div className={styles.imageContainer}>
         <div className={styles.placeholder}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -34,11 +39,17 @@ export function AnimalCard({ animal }: AnimalCardProps) {
 
         {opcoes.length > 0 && (
           <div className={styles.traits}>
-            {opcoes.map((opcao) => (
-              <span key={opcao.id_opcao} className={styles.trait}>
-                {opcao.valor}
-              </span>
-            ))}
+            {opcoes.map((opcao) => {
+              const isMatched = hasFilters && selectedSet.has(opcao.id_opcao)
+              return (
+                <span
+                  key={opcao.id_opcao}
+                  className={`${styles.trait} ${isMatched ? styles.traitMatched : ''}`}
+                >
+                  {opcao.valor}
+                </span>
+              )
+            })}
           </div>
         )}
       </div>
