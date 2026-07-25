@@ -1,7 +1,36 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
+
+function readFiltersFromURL(): number[] {
+  const params = new URLSearchParams(window.location.search)
+  const f = params.get('f')
+  if (!f) return []
+  return f.split(',').map(Number).filter((n) => !isNaN(n))
+}
+
+function writeFiltersToURL(ids: number[]) {
+  const url = new URL(window.location.href)
+  if (ids.length === 0) {
+    url.searchParams.delete('f')
+  } else {
+    url.searchParams.set('f', ids.join(','))
+  }
+  window.history.replaceState({}, '', url.toString())
+}
 
 export function useFiltros() {
-  const [selectedOptions, setSelectedOptions] = useState<number[]>([])
+  const [selectedOptions, setSelectedOptions] = useState<number[]>(readFiltersFromURL)
+
+  useEffect(() => {
+    writeFiltersToURL(selectedOptions)
+  }, [selectedOptions])
+
+  useEffect(() => {
+    function handlePopState() {
+      setSelectedOptions(readFiltersFromURL())
+    }
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [])
 
   const toggleOption = useCallback((idOpcao: number) => {
     setSelectedOptions((prev) =>

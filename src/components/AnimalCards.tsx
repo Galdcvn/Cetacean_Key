@@ -83,12 +83,13 @@ export function AnimalCards({
         </span>
       </div>
       <div className={styles.grid}>
-        {animals.map((animal) => (
+        {animals.map((animal, index) => (
           <AnimalCard
             key={animal.id_animal}
             animal={animal}
             selectedOptions={selectedOptions}
             onSelect={() => onSelectAnimal(animal)}
+            style={{ animationDelay: `${Math.min(index * 40, 400)}ms` }}
           />
         ))}
       </div>

@@ -11,6 +11,7 @@ import type { AnimalComCaracteristicas } from './types/cetacean'
 function App() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedAnimal, setSelectedAnimal] = useState<AnimalComCaracteristicas | null>(null)
+  const [drawerOpen, setDrawerOpen] = useState(false)
 
   const { selectedOptions, toggleOption, resetFilters } = useFiltros()
   const { caracteristicas, loading: loadingCaract } = useCaracteristicas()
@@ -31,6 +32,9 @@ function App() {
               selectedOptions={selectedOptions}
               onToggle={toggleOption}
               onReset={resetFilters}
+              allAnimals={results}
+              isOpen={drawerOpen}
+              onClose={() => setDrawerOpen(false)}
             />
           )}
         </section>
@@ -47,6 +51,18 @@ function App() {
           />
         </section>
       </main>
+
+      {!drawerOpen && (
+        <button
+          className="mobileFilterBtn"
+          onClick={() => setDrawerOpen(true)}
+        >
+          Filtros
+          {selectedOptions.length > 0 && (
+            <span className="mobileFilterBadge">{selectedOptions.length}</span>
+          )}
+        </button>
+      )}
 
       {selectedAnimal && (
         <AnimalDetailModal

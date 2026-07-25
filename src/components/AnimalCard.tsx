@@ -5,9 +5,10 @@ interface AnimalCardProps {
   animal: AnimalComCaracteristicas
   selectedOptions: number[]
   onSelect: () => void
+  style?: React.CSSProperties
 }
 
-export function AnimalCard({ animal, selectedOptions, onSelect }: AnimalCardProps) {
+export function AnimalCard({ animal, selectedOptions, onSelect, style }: AnimalCardProps) {
   const opcoes = animal.animal_identificacao
     .map((ai) => ai.opcoes_caracteristica)
     .filter(Boolean)
@@ -16,7 +17,7 @@ export function AnimalCard({ animal, selectedOptions, onSelect }: AnimalCardProp
   const hasFilters = selectedOptions.length > 0
 
   return (
-    <div className={styles.card} onClick={onSelect} role="button" tabIndex={0}>
+    <div className={styles.card} onClick={onSelect} role="button" tabIndex={0} style={style}>
       <div className={styles.imageContainer}>
         <div className={styles.placeholder}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
