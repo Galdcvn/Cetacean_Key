@@ -8,9 +8,9 @@ import { useFilteredAnimais } from './hooks/useFilteredAnimais'
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('')
-  const { selectedOptions, toggleOption, resetFilters, resetGroup } = useFiltros()
+  const { selectedOptions, toggleOption } = useFiltros()
   const { caracteristicas, loading: loadingCaract } = useCaracteristicas()
-  const { results, loading: loadingAnimals } = useFilteredAnimais(selectedOptions, searchQuery)
+  const { results, loading: loadingAnimals, error } = useFilteredAnimais(selectedOptions, searchQuery)
 
   return (
     <div className="app">
@@ -23,14 +23,16 @@ function App() {
               caracteristicas={caracteristicas}
               selectedOptions={selectedOptions}
               onToggle={toggleOption}
-              onResetAll={resetFilters}
-              onResetGroup={resetGroup}
             />
           )}
         </section>
 
         <section className="cards">
-          <AnimalCards animais={results} loading={loadingAnimals || loadingCaract} />
+          <AnimalCards
+            animals={results}
+            loading={loadingAnimals || loadingCaract}
+            error={error}
+          />
         </section>
       </main>
     </div>

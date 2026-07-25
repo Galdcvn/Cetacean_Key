@@ -7,12 +7,19 @@
 :root {
   --color-primary: #306F9B;
   --color-primary-dark: #1F4A6B;
-  --color-bg: #F5F7FA;
+  --color-primary-light: #4A8FC0;
+  --color-bg: #F0F4F8;
   --color-surface: #FFFFFF;
-  --color-surface-alt: #D9E3ED;
+  --color-surface-alt: #E4ECF2;
   --color-text: #0D2738;
   --color-text-light: #5A7A94;
+  --color-border: #D0DBE4;
+  --color-shadow: rgba(13, 39, 56, 0.08);
   --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
 }
 
 body {
@@ -20,6 +27,7 @@ body {
   background-color: var(--color-bg);
   color: var(--color-text);
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
 
 #root {
@@ -36,11 +44,11 @@ body {
   flex: 1;
   display: flex;
   justify-content: center;
-  gap: 40px;
-  max-width: 1200px;
+  gap: 32px;
+  max-width: 1240px;
   width: 100%;
   margin: 0 auto;
-  padding: 30px 16px;
+  padding: 28px 24px;
 }
 
 .filtros {
@@ -52,10 +60,10 @@ body {
   min-width: 0;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .main {
     flex-direction: column;
-    gap: 20px;
+    gap: 24px;
     padding: 20px 16px;
   }
 }

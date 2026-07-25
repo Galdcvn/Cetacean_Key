@@ -1,30 +1,69 @@
-import type { AnimalComCaracteristicas } from '../types/cetacean'
+import { AnimalComCaracteristicas } from '../types/cetacean'
 import { AnimalCard } from './AnimalCard'
 import styles from './AnimalCards.module.css'
 
 interface AnimalCardsProps {
-  animais: AnimalComCaracteristicas[]
+  animals: AnimalComCaracteristicas[]
   loading: boolean
+  error: string | null
 }
 
-export function AnimalCards({ animais, loading }: AnimalCardsProps) {
+function LoadingSkeleton() {
   return (
-    <section className={styles.section}>
-      <h1 className={styles.heading}>
-        ANIMAIS ENCONTRADOS: <span className={styles.count}>{animais.length}</span>
-      </h1>
-
-      {loading ? (
-        <div className={styles.loading}>Carregando...</div>
-      ) : animais.length === 0 ? (
-        <div className={styles.empty}>Nenhum animal encontrado com esses filtros.</div>
-      ) : (
-        <div className={styles.list}>
-          {animais.map((animal) => (
-            <AnimalCard key={animal.id_animal} animal={animal} />
-          ))}
+    <div className={styles.grid}>
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div key={i} className={styles.skeletonCard}>
+          <div className={styles.skeletonImage} />
+          <div className={styles.skeletonContent}>
+            <div className={styles.skeletonLine} style={{ width: '70%', height: 18 }} />
+            <div className={styles.skeletonLine} style={{ width: '55%', height: 14 }} />
+            <div className={styles.skeletonLine} style={{ width: '40%', height: 12 }} />
+          </div>
         </div>
-      )}
-    </section>
+      ))}
+    </div>
+  )
+}
+
+export function AnimalCards({ animals, loading, error }: AnimalCardsProps) {
+  if (loading) return <LoadingSkeleton />
+
+  if (error) {
+    return (
+      <div className={styles.emptyState}>
+        <div className={styles.emptyIcon}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 8v4M12 16h.01" />
+          </svg>
+        </div>
+        <p className={styles.emptyTitle}>Erro ao carregar</p>
+        <p className={styles.emptyDesc}>{error}</p>
+      </div>
+    )
+  }
+
+  if (animals.length === 0) {
+    return (
+      <div className={styles.emptyState}>
+        <div className={styles.emptyIcon}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <path d="M21 21l-4.35-4.35" />
+            <path d="M8 11h6" />
+          </svg>
+        </div>
+        <p className={styles.emptyTitle}>Nenhum animal encontrado</p>
+        <p className={styles.emptyDesc}>Tente ajustar os filtros ou a busca.</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className={styles.grid}>
+      {animals.map((animal) => (
+        <AnimalCard key={animal.id_animal} animal={animal} />
+      ))}
+    </div>
   )
 }

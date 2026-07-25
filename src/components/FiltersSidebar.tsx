@@ -1,4 +1,4 @@
-import type { CaracteristicaComOpcoes } from '../types/cetacean'
+import { CaracteristicaComOpcoes } from '../types/cetacean'
 import { FilterGroup } from './FilterGroup'
 import styles from './FiltersSidebar.module.css'
 
@@ -6,34 +6,25 @@ interface FiltersSidebarProps {
   caracteristicas: CaracteristicaComOpcoes[]
   selectedOptions: number[]
   onToggle: (idOpcao: number) => void
-  onResetAll: () => void
-  onResetGroup: (opcoesIds: number[]) => void
 }
 
-export function FiltersSidebar({
-  caracteristicas,
-  selectedOptions,
-  onToggle,
-  onResetAll,
-  onResetGroup,
-}: FiltersSidebarProps) {
+export function FiltersSidebar({ caracteristicas, selectedOptions, onToggle }: FiltersSidebarProps) {
   return (
     <aside className={styles.sidebar}>
-      <header className={styles.header}>
-        <p className={styles.title}>Filtros</p>
-        <button className={styles.resetAllBtn} onClick={onResetAll}>
-          Resetar
-        </button>
-      </header>
-
+      <div className={styles.sidebarHeader}>
+        <h2 className={styles.sidebarTitle}>Filtros</h2>
+        {selectedOptions.length > 0 && (
+          <span className={styles.badge}>{selectedOptions.length}</span>
+        )}
+      </div>
       <div className={styles.groups}>
-        {caracteristicas.map((caract) => (
+        {caracteristicas.map((carac) => (
           <FilterGroup
-            key={caract.id_caract}
-            caracteristica={caract}
-            selectedOptions={selectedOptions}
+            key={carac.id_caract}
+            nome={carac.nome}
+            opcoes={carac.opcoes_caracteristica}
+            selectedIds={selectedOptions}
             onToggle={onToggle}
-            onResetGroup={onResetGroup}
           />
         ))}
       </div>

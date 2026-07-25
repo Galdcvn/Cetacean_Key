@@ -1,4 +1,4 @@
-import type { AnimalComCaracteristicas } from '../types/cetacean'
+import { AnimalComCaracteristicas } from '../types/cetacean'
 import styles from './AnimalCard.module.css'
 
 interface AnimalCardProps {
@@ -6,33 +6,40 @@ interface AnimalCardProps {
 }
 
 export function AnimalCard({ animal }: AnimalCardProps) {
-  const subordemNome =
-    animal.subordens && !Array.isArray(animal.subordens)
-      ? animal.subordens.nome
-      : ''
+  const opcoes = animal.animal_identificacao
+    .map((ai) => ai.opcoes_caracteristica)
+    .filter(Boolean)
 
   return (
     <div className={styles.card}>
-      <div className={styles.imageFrame}>
-        <svg
-          className={styles.placeholder}
-          viewBox="0 0 64 64"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <ellipse cx="32" cy="32" rx="24" ry="12" fill="#A0B4C8" />
-          <path d="M12 32c0 0 4-14 20-14s20 14 20 14" stroke="#7A97B0" strokeWidth="1.5" fill="none" />
-          <circle cx="16" cy="30" r="1.5" fill="#5A7A94" />
-          <path d="M8 34c-2 1-4 0-4 0" stroke="#7A97B0" strokeWidth="1.5" strokeLinecap="round" />
-          <path d="M52 26c3-4 6-3 6-3" stroke="#7A97B0" strokeWidth="1.5" strokeLinecap="round" />
-        </svg>
+      <div className={styles.imageContainer}>
+        <div className={styles.placeholder}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
+            <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+            <circle cx="9" cy="9" r="1" fill="currentColor" />
+            <circle cx="15" cy="9" r="1" fill="currentColor" />
+          </svg>
+        </div>
       </div>
 
-      <div className={styles.info}>
-        <h2 className={styles.nome}>{animal.nome_comum}</h2>
-        <h3 className={styles.cientifico}>{animal.nome_cientifico}</h3>
-        {subordemNome && (
-          <span className={styles.subordem}>{subordemNome}</span>
+      <div className={styles.content}>
+        <div className={styles.names}>
+          <h3 className={styles.commonName}>{animal.nome_comum}</h3>
+          <p className={styles.scientificName}>{animal.nome_cientifico}</p>
+          {animal.genero && (
+            <p className={styles.genre}>{animal.genero}</p>
+          )}
+        </div>
+
+        {opcoes.length > 0 && (
+          <div className={styles.traits}>
+            {opcoes.map((opcao) => (
+              <span key={opcao.id_opcao} className={styles.trait}>
+                {opcao.valor}
+              </span>
+            ))}
+          </div>
         )}
       </div>
     </div>

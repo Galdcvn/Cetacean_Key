@@ -1,3 +1,4 @@
+import logoSvg from '../assets/logo.svg'
 import styles from './Header.module.css'
 
 interface HeaderProps {
@@ -9,25 +10,7 @@ export function Header({ searchQuery, onSearchChange }: HeaderProps) {
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
-        <div className={styles.logo}>
-          <svg
-            viewBox="0 0 259 131"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className={styles.logoSvg}
-          >
-            <text
-              x="10"
-              y="80"
-              fill="#D9E3ED"
-              fontFamily="Georgia, serif"
-              fontSize="48"
-              fontWeight="bold"
-            >
-              Cetacean Key
-            </text>
-          </svg>
-        </div>
+        <img src={logoSvg} alt="Cetacean Key" className={styles.logo} />
 
         <div className={styles.searchWrapper}>
           <svg
@@ -45,7 +28,7 @@ export function Header({ searchQuery, onSearchChange }: HeaderProps) {
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Buscar cetáceo..."
+            placeholder="Buscar por nome, gênero ou espécie..."
             className={styles.searchInput}
           />
           {searchQuery && (
