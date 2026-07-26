@@ -1,0 +1,37 @@
+{
+  "6": {
+    "id_animal": 6,
+    "nome_comum": "Baleia-azul",
+    "nome_cientifico": "Balaenoptera musculus",
+    "file": "Balaenoptera_musculus.geojson",
+    "bbox": [-75.0, -60.0, -10.0, 10.0]
+  },
+  "14": {
+    "id_animal": 14,
+    "nome_comum": "Baleia-jubarte",
+    "nome_cientifico": "Megaptera novaeangliae",
+    "file": "Megaptera_novaeangliae.geojson",
+    "bbox": [-70.0, -55.0, -20.0, 5.0]
+  },
+  "22": {
+    "id_animal": 22,
+    "nome_comum": "Beluga",
+    "nome_cientifico": "Delphinapterus leucas",
+    "file": "Delphinapterus_leucas.geojson",
+    "bbox": [-70.0, -65.0, -30.0, 15.0]
+  },
+  "34": {
+    "id_animal": 34,
+    "nome_comum": "Boto-cor-de-Rosa",
+    "nome_cientifico": "Inia geoffrensis",
+    "file": "Inia_geoffrensis.geojson",
+    "bbox": [-78.0, -22.0, -45.0, 5.0]
+  },
+  "10": {
+    "id_animal": 10,
+    "nome_comum": "Baleia-cinzenta",
+    "nome_cientifico": "Eschrichtius robustus",
+    "file": "Eschrichtius_robustus.geojson",
+    "bbox": [-130.0, -55.0, 0.0, 70.0]
+  }
+}

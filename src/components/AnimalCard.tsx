@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import type { User } from '@supabase/supabase-js'
 import { AnimalComCaracteristicas } from '../types/cetacean'
+import { FavoriteButton } from './FavoriteButton'
 import styles from './AnimalCard.module.css'
 
 interface AnimalCardProps {
@@ -7,9 +9,16 @@ interface AnimalCardProps {
   selectedOptions: number[]
   onSelect: () => void
   style?: React.CSSProperties
+  user: User | null
+  isFavorited: boolean
+  onToggleFavorito: () => void
+  onLoginClick: () => void
 }
 
-export function AnimalCard({ animal, selectedOptions, onSelect, style }: AnimalCardProps) {
+export function AnimalCard({
+  animal, selectedOptions, onSelect, style,
+  user, isFavorited, onToggleFavorito, onLoginClick,
+}: AnimalCardProps) {
   const [imgError, setImgError] = useState(false)
   const opcoes = animal.animal_identificacao
     .map((ai) => ai.opcoes_caracteristica)
@@ -22,6 +31,11 @@ export function AnimalCard({ animal, selectedOptions, onSelect, style }: AnimalC
   return (
     <div className={styles.card} onClick={onSelect} role="button" tabIndex={0} style={style}>
       <div className={styles.imageContainer}>
+        <FavoriteButton
+          isFavorited={isFavorited}
+          disabled={!user}
+          onClick={user ? onToggleFavorito : onLoginClick}
+        />
         {hasImage ? (
           <img
             className={styles.image}

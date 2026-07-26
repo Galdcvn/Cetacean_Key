@@ -1,0 +1,42 @@
+.heartBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px;
+  color: var(--color-text-light);
+  transition: color 0.2s ease, transform 0.2s ease, background 0.15s ease;
+  z-index: 2;
+}
+
+[data-theme="dark"] .heartBtn {
+  background: rgba(26, 39, 54, 0.85);
+}
+
+.heartBtn:hover:not(:disabled) {
+  color: #e74c3c;
+  transform: scale(1.1);
+}
+
+.heartBtn.active {
+  color: #e74c3c;
+}
+
+.heartBtn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.heartBtn svg {
+  width: 18px;
+  height: 18px;
+}

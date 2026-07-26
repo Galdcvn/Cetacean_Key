@@ -56,6 +56,55 @@
   background: rgba(255, 255, 255, 0.25);
 }
 
+.userArea {
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+}
+
+.authButtons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.loginBtn {
+  height: 34px;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-family);
+  cursor: pointer;
+  padding: 0 14px;
+  transition: background 0.15s ease;
+}
+
+.loginBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.registerBtn {
+  height: 34px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-family);
+  cursor: pointer;
+  padding: 0 14px;
+  transition: background 0.15s ease;
+}
+
+.registerBtn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
 .searchWrapper {
   position: relative;
   width: 100%;
@@ -138,5 +187,11 @@
   .searchInput {
     font-size: 14px;
     height: 44px;
+  }
+
+  .loginBtn, .registerBtn {
+    font-size: 12px;
+    height: 30px;
+    padding: 0 10px;
   }
 }

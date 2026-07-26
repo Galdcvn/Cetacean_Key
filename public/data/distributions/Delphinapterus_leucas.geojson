@@ -1,0 +1,16 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-60.0, -55.0], [-40.0, -55.0], [-30.0, -50.0],
+          [-35.0, -40.0], [-45.0, -35.0], [-55.0, -40.0], [-60.0, -55.0]
+        ]]
+      },
+      "properties": { "type": "confirmed", "label": "Costa sudeste" }
+    }
+  ]
+}

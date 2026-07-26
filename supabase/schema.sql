@@ -47,3 +47,27 @@ CREATE TABLE animal_identificacao (
     FOREIGN KEY (id_animal) REFERENCES animais(id_animal) ON DELETE CASCADE,
     FOREIGN KEY (id_opcao) REFERENCES opcoes_caracteristica(id_opcao) ON DELETE CASCADE
 );
+
+-- 6. Tabela de favoritos (por usuario)
+CREATE TABLE favoritos (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    id_animal INT NOT NULL REFERENCES animais(id_animal) ON DELETE CASCADE,
+    criado_em TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE(user_id, id_animal)
+);
+
+CREATE INDEX idx_favoritos_user ON favoritos(user_id);
+CREATE INDEX idx_favoritos_animal ON favoritos(id_animal);
+
+-- RLS
+ALTER TABLE favoritos ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Usuarios leem apenas seus proprios favoritos"
+  ON favoritos FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Usuarios inserem apenas seus proprios favoritos"
+  ON favoritos FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Usuarios deletam apenas seus proprios favoritos"
+  ON favoritos FOR DELETE USING (auth.uid() = user_id);

@@ -93,6 +93,26 @@ export interface Database {
           observacao?: string | null
         }
       }
+      favoritos: {
+        Row: {
+          id: number
+          user_id: string
+          id_animal: number
+          criado_em: string
+        }
+        Insert: {
+          id?: number
+          user_id: string
+          id_animal: number
+          criado_em?: string
+        }
+        Update: {
+          id?: number
+          user_id?: string
+          id_animal?: number
+          criado_em?: string
+        }
+      }
     }
     Views: Record<string, never>
     Functions: Record<string, never>

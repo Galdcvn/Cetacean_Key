@@ -1,4 +1,6 @@
+import type { User } from '@supabase/supabase-js'
 import logoSvg from '../assets/logo.svg'
+import { UserMenu } from './UserMenu'
 import styles from './Header.module.css'
 
 interface HeaderProps {
@@ -6,14 +8,40 @@ interface HeaderProps {
   onSearchChange: (value: string) => void
   theme: 'light' | 'dark'
   onToggleTheme: () => void
+  user: User | null
+  loadingAuth: boolean
+  onLoginClick: () => void
+  onRegisterClick: () => void
+  onSignOut: () => void
 }
 
-export function Header({ searchQuery, onSearchChange, theme, onToggleTheme }: HeaderProps) {
+export function Header({
+  searchQuery, onSearchChange, theme, onToggleTheme,
+  user, loadingAuth, onLoginClick, onRegisterClick, onSignOut,
+}: HeaderProps) {
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
         <div className={styles.topBar}>
           <img src={logoSvg} alt="Cetacean Key" className={styles.logo} />
+
+          <div className={styles.userArea}>
+            {!loadingAuth && (
+              user ? (
+                <UserMenu email={user.email ?? ''} onSignOut={onSignOut} />
+              ) : (
+                <div className={styles.authButtons}>
+                  <button className={styles.loginBtn} onClick={onLoginClick}>
+                    Entrar
+                  </button>
+                  <button className={styles.registerBtn} onClick={onRegisterClick}>
+                    Cadastrar
+                  </button>
+                </div>
+              )
+            )}
+          </div>
+
           <button
             className={styles.themeBtn}
             onClick={onToggleTheme}

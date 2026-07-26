@@ -31,3 +31,6 @@ export interface AnimalComCaracteristicas extends AnimalComSubordem {
     }
   }[]
 }
+
+export type Favorito = Database['public']['Tables']['favoritos']['Row']
+export type FavoritoInsert = Database['public']['Tables']['favoritos']['Insert']

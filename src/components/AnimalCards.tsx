@@ -1,3 +1,4 @@
+import type { User } from '@supabase/supabase-js'
 import { AnimalComCaracteristicas } from '../types/cetacean'
 import { AnimalCard } from './AnimalCard'
 import styles from './AnimalCards.module.css'
@@ -10,6 +11,10 @@ interface AnimalCardsProps {
   filteredCount: number
   selectedOptions: number[]
   onSelectAnimal: (animal: AnimalComCaracteristicas) => void
+  user: User | null
+  isFavorited: (idAnimal: number) => boolean
+  onToggleFavorito: (idAnimal: number) => void
+  onLoginClick: () => void
 }
 
 function LoadingSkeleton() {
@@ -37,6 +42,10 @@ export function AnimalCards({
   filteredCount,
   selectedOptions,
   onSelectAnimal,
+  user,
+  isFavorited,
+  onToggleFavorito,
+  onLoginClick,
 }: AnimalCardsProps) {
   if (loading) return <LoadingSkeleton />
 
@@ -90,6 +99,10 @@ export function AnimalCards({
             selectedOptions={selectedOptions}
             onSelect={() => onSelectAnimal(animal)}
             style={{ animationDelay: `${Math.min(index * 40, 400)}ms` }}
+            user={user}
+            isFavorited={isFavorited(animal.id_animal)}
+            onToggleFavorito={() => onToggleFavorito(animal.id_animal)}
+            onLoginClick={onLoginClick}
           />
         ))}
       </div>

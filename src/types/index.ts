@@ -12,4 +12,6 @@ export type {
   AnimalComSubordem,
   CaracteristicaComOpcoes,
   AnimalComCaracteristicas,
+  Favorito,
+  FavoritoInsert,
 } from './cetacean'
