@@ -77,7 +77,7 @@ function AppInner() {
     searchQuery
   )
 
-  const { user, loading: loadingAuth, signUp, signIn, signOut } = useAuth()
+  const { user, loading: loadingAuth, signUp, signIn, signInWithGoogle, signOut } = useAuth()
   const { isFavorited, toggleFavorito } = useFavorites(user)
 
   return (
@@ -172,6 +172,7 @@ function AppInner() {
           mode={authModal}
           onLogin={signIn}
           onRegister={signUp}
+          onGoogleLogin={signInWithGoogle}
           onClose={() => setAuthModal(null)}
           onSwitchMode={() =>
             setAuthModal((prev) => (prev === 'login' ? 'register' : 'login'))

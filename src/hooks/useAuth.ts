@@ -7,6 +7,7 @@ export interface UseAuthReturn {
   loading: boolean
   signUp: (email: string, password: string) => Promise<{ error: AuthError | null }>
   signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>
+  signInWithGoogle: () => Promise<{ error: AuthError | null }>
   signOut: () => Promise<void>
 }
 
@@ -50,5 +51,15 @@ export function useAuth(): UseAuthReturn {
     await supabase.auth.signOut()
   }, [])
 
-  return { user, loading, signUp, signIn, signOut }
+  const signInWithGoogle = useCallback(async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin,
+      },
+    })
+    return { error }
+  }, [])
+
+  return { user, loading, signUp, signIn, signInWithGoogle, signOut }
 }
