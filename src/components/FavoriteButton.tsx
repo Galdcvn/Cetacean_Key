@@ -4,9 +4,10 @@ interface FavoriteButtonProps {
   isFavorited: boolean
   disabled: boolean
   onClick: () => void
+  label?: string
 }
 
-export function FavoriteButton({ isFavorited, disabled, onClick }: FavoriteButtonProps) {
+export function FavoriteButton({ isFavorited, disabled, onClick, label }: FavoriteButtonProps) {
   return (
     <button
       className={`${styles.heartBtn} ${isFavorited ? styles.active : ''}`}
@@ -14,8 +15,8 @@ export function FavoriteButton({ isFavorited, disabled, onClick }: FavoriteButto
         e.stopPropagation()
         if (!disabled) onClick()
       }}
-      aria-label={isFavorited ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
-      title={disabled ? 'Entre para salvar favoritos' : undefined}
+      aria-label={label ?? (isFavorited ? 'Remover dos favoritos' : 'Adicionar aos favoritos')}
+      title={disabled ? (label ?? 'Faça login para favoritar') : undefined}
       disabled={disabled}
     >
       <svg viewBox="0 0 24 24" fill={isFavorited ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

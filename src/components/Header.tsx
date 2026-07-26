@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import type { User } from '@supabase/supabase-js'
 import logoSvg from '../assets/logo.svg'
 import { UserMenu } from './UserMenu'
@@ -19,6 +20,19 @@ export function Header({
   searchQuery, onSearchChange, theme, onToggleTheme,
   user, loadingAuth, onLoginClick, onRegisterClick, onSignOut,
 }: HeaderProps) {
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        const active = document.activeElement
+        if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return
+        e.preventDefault()
+        document.querySelector<HTMLInputElement>('.searchInput, input[type="text"]')?.focus()
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
@@ -26,19 +40,19 @@ export function Header({
           <img src={logoSvg} alt="Cetacean Key" className={styles.logo} />
 
           <div className={styles.userArea}>
-            {!loadingAuth && (
-              user ? (
-                <UserMenu email={user.email ?? ''} onSignOut={onSignOut} />
-              ) : (
-                <div className={styles.authButtons}>
-                  <button className={styles.loginBtn} onClick={onLoginClick}>
-                    Entrar
-                  </button>
-                  <button className={styles.registerBtn} onClick={onRegisterClick}>
-                    Cadastrar
-                  </button>
-                </div>
-              )
+            {loadingAuth ? (
+              <div className={styles.authSkeleton} />
+            ) : user ? (
+              <UserMenu email={user.email ?? ''} onSignOut={onSignOut} />
+            ) : (
+              <div className={styles.authButtons}>
+                <button className={styles.loginBtn} onClick={onLoginClick}>
+                  Entrar
+                </button>
+                <button className={styles.registerBtn} onClick={onRegisterClick}>
+                  Criar conta
+                </button>
+              </div>
             )}
           </div>
 
@@ -85,6 +99,8 @@ export function Header({
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Buscar por nome, gênero ou espécie..."
             className={styles.searchInput}
+            maxLength={100}
+            aria-label="Buscar cetáceos"
           />
           {searchQuery && (
             <button
@@ -97,6 +113,7 @@ export function Header({
               </svg>
             </button>
           )}
+          <kbd className={styles.shortcutHint}>/</kbd>
         </div>
       </div>
     </header>

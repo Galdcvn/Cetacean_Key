@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { supabase } from '../lib/supabase'
 import type { AnimalComCaracteristicas } from '../types/cetacean'
 import { smartSearchAnimals } from '../utils/smartSearch'
@@ -79,9 +79,20 @@ export function useFilteredAnimais(
     })
   }, [allAnimals, selectedOptions])
 
+  const [debouncedQuery, setDebouncedQuery] = useState(searchQuery)
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+
+  useEffect(() => {
+    clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => {
+      setDebouncedQuery(searchQuery)
+    }, 200)
+    return () => clearTimeout(debounceRef.current)
+  }, [searchQuery])
+
   const results = useMemo(
-    () => smartSearchAnimals(filteredByOptions, searchQuery),
-    [filteredByOptions, searchQuery]
+    () => smartSearchAnimals(filteredByOptions, debouncedQuery),
+    [filteredByOptions, debouncedQuery]
   )
 
   return { results, loading, error, totalCount: allAnimals.length }

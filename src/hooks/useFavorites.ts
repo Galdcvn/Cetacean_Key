@@ -60,6 +60,8 @@ export function useFavorites(user: User | null): UseFavoritesReturn {
         return next
       })
 
+      let failed = false
+
       if (isCurrentlyFav) {
         const { error } = await supabase
           .from('favoritos' as never)
@@ -68,6 +70,7 @@ export function useFavorites(user: User | null): UseFavoritesReturn {
           .eq('id_animal', idAnimal)
 
         if (error) {
+          failed = true
           setFavoritos((prev) => {
             const next = new Set(prev)
             next.add(idAnimal)
@@ -80,12 +83,19 @@ export function useFavorites(user: User | null): UseFavoritesReturn {
           .insert({ user_id: user.id, id_animal: idAnimal } as never)
 
         if (error) {
+          failed = true
           setFavoritos((prev) => {
             const next = new Set(prev)
             next.delete(idAnimal)
             return next
           })
         }
+      }
+
+      if (failed) {
+        window.dispatchEvent(new CustomEvent('app-toast', {
+          detail: { message: 'Erro ao salvar favorito. Tente novamente.', type: 'error' },
+        }))
       }
     },
     [user, favoritos]

@@ -25,9 +25,16 @@ export function FilterGroup({ nome, opcoes, selectedIds, onToggle, optionCounts 
               key={opcao.id_opcao}
               className={`${styles.option} ${isEmpty ? styles.optionEmpty : ''}`}
               data-active={isActive}
-              onClick={() => onToggle(opcao.id_opcao)}
             >
-              <span className={styles.checkbox}>
+              <input
+                type="checkbox"
+                className={styles.hiddenCheckbox}
+                checked={isActive}
+                onChange={() => onToggle(opcao.id_opcao)}
+                aria-label={`${opcao.valor} — ${count} espécies`}
+                title={`${opcao.valor} — ${count} espécies`}
+              />
+              <span className={styles.checkbox} aria-hidden="true">
                 {isActive && (
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M20 6L9 17l-5-5" />

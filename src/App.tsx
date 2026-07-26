@@ -4,6 +4,7 @@ import { FiltersSidebar } from './components/FiltersSidebar'
 import { AnimalCards } from './components/AnimalCards'
 import { AnimalDetailModal } from './components/AnimalDetailModal'
 import { AuthModal } from './components/AuthModal'
+import { ToastProvider, useToast } from './components/Toast'
 import { useFiltros } from './hooks/useFiltros'
 import { useCaracteristicas } from './hooks/useCaracteristicas'
 import { useFilteredAnimais } from './hooks/useFilteredAnimais'
@@ -14,12 +15,41 @@ import type { AnimalComCaracteristicas } from './types/cetacean'
 
 type AuthMode = 'login' | 'register'
 
-function App() {
+function WelcomeBanner({ onDismiss }: { onDismiss: () => void }) {
+  return (
+    <div className="welcomeBanner">
+      <div className="welcomeContent">
+        <p className="welcomeText">
+          Bem-vindo ao Cetacean Key! Use os filtros à esquerda para identificar cetáceos por suas características.
+        </p>
+        <button className="welcomeDismiss" onClick={onDismiss} aria-label="Fechar banner">
+          Entendi
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function AppInner() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedAnimal, setSelectedAnimal] = useState<AnimalComCaracteristicas | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [showScrollTop, setShowScrollTop] = useState(false)
   const [authModal, setAuthModal] = useState<AuthMode | null>(null)
+  const [showWelcome, setShowWelcome] = useState(() => {
+    return !localStorage.getItem('cetacean_welcome_dismissed')
+  })
+
+  const { showToast } = useToast()
+
+  useEffect(() => {
+    function handleAppToast(e: Event) {
+      const detail = (e as CustomEvent).detail
+      showToast(detail.message, detail.type)
+    }
+    window.addEventListener('app-toast', handleAppToast)
+    return () => window.removeEventListener('app-toast', handleAppToast)
+  }, [showToast])
 
   const handleScroll = useCallback(() => {
     setShowScrollTop(window.scrollY > 300)
@@ -32,6 +62,11 @@ function App() {
 
   const scrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [])
+
+  const dismissWelcome = useCallback(() => {
+    setShowWelcome(false)
+    localStorage.setItem('cetacean_welcome_dismissed', '1')
   }, [])
 
   const { theme, toggleTheme } = useTheme()
@@ -59,6 +94,8 @@ function App() {
         onSignOut={signOut}
       />
 
+      {showWelcome && <WelcomeBanner onDismiss={dismissWelcome} />}
+
       <main className="main">
         <section className="filtros">
           {!loadingCaract && (
@@ -70,6 +107,7 @@ function App() {
               allAnimals={results}
               isOpen={drawerOpen}
               onClose={() => setDrawerOpen(false)}
+              loading={loadingCaract}
             />
           )}
         </section>
@@ -82,10 +120,12 @@ function App() {
             totalCount={totalCount}
             filteredCount={results.length}
             selectedOptions={selectedOptions}
+            searchQuery={searchQuery}
             onSelectAnimal={setSelectedAnimal}
             user={user}
             isFavorited={isFavorited}
             onToggleFavorito={toggleFavorito}
+            onRemoveFilter={toggleOption}
             onLoginClick={() => setAuthModal('login')}
           />
         </section>
@@ -117,7 +157,9 @@ function App() {
         <AnimalDetailModal
           animal={selectedAnimal}
           selectedOptions={selectedOptions}
+          allAnimals={results}
           onClose={() => setSelectedAnimal(null)}
+          onSelectAnimal={setSelectedAnimal}
           user={user}
           isFavorited={isFavorited(selectedAnimal.id_animal)}
           onToggleFavorito={() => toggleFavorito(selectedAnimal.id_animal)}
@@ -140,4 +182,10 @@ function App() {
   )
 }
 
-export default App
+export default function App() {
+  return (
+    <ToastProvider>
+      <AppInner />
+    </ToastProvider>
+  )
+}

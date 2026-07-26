@@ -22,7 +22,7 @@ function FitBounds({ bbox }: { bbox?: [number, number, number, number] | null })
 }
 
 export function DistributionMap({ idAnimal }: DistributionMapProps) {
-  const { geojson, loading, bbox } = useDistribution(idAnimal)
+  const { geojson, loading, error, bbox, retry } = useDistribution(idAnimal)
   const { theme } = useTheme()
 
   const tileUrl = theme === 'dark'
@@ -35,9 +35,16 @@ export function DistributionMap({ idAnimal }: DistributionMapProps) {
 
   return (
     <div className={styles.container}>
-      <h3 className={styles.title}>Mapa de Distribuicao</h3>
+      <h3 className={styles.title}>Mapa de Distribuição</h3>
       {loading ? (
         <div className={styles.placeholder}>Carregando mapa...</div>
+      ) : error ? (
+        <div className={styles.placeholder}>
+          <p>{error}</p>
+          <button className={styles.retryBtn} onClick={retry}>
+            Tentar novamente
+          </button>
+        </div>
       ) : geojson ? (
         <>
           <MapContainer
@@ -47,7 +54,7 @@ export function DistributionMap({ idAnimal }: DistributionMapProps) {
             scrollWheelZoom={false}
             attributionControl={true}
           >
-            <TileLayer url={tileUrl} attribution='&copy; OSM, CartoDB' />
+            <TileLayer url={tileUrl} attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>, <a href="https://carto.com/">CartoDB</a>' />
             <GeoJSON
               data={geojson as unknown as FeatureCollection}
               style={(feature) => ({
@@ -62,18 +69,23 @@ export function DistributionMap({ idAnimal }: DistributionMapProps) {
           <div className={styles.legend}>
             <span className={styles.legendItem}>
               <span className={styles.legendDot} style={{ background: '#306F9B' }} />
-              Presenca confirmada
+              Presença confirmada
             </span>
             <span className={styles.legendItem}>
               <span className={styles.legendDot} style={{ background: '#8AB4D6' }} />
-              Possivel ocorrencia
+              Possível ocorrência
             </span>
           </div>
-          <p className={styles.attribution}>Dados: IUCN Red List / AquaMaps</p>
+          <p className={styles.attribution}>
+            Dados: <a href="https://www.iucnredlist.org/" target="_blank" rel="noopener noreferrer">IUCN Red List</a> / <a href="https://www.aquamaps.org/" target="_blank" rel="noopener noreferrer">AquaMaps</a>
+          </p>
+          <p className={styles.helperText}>
+            Regiões coloridas indicam áreas de ocorrência conhecida ou provável.
+          </p>
         </>
       ) : (
         <div className={styles.placeholder}>
-          Dados de distribuicao indisponiveis
+          Dados de distribuição indisponíveis
         </div>
       )}
     </div>

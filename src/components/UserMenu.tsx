@@ -4,9 +4,10 @@ import styles from './UserMenu.module.css'
 interface UserMenuProps {
   email: string
   onSignOut: () => void
+  onFavoritesClick?: () => void
 }
 
-export function UserMenu({ email, onSignOut }: UserMenuProps) {
+export function UserMenu({ email, onSignOut, onFavoritesClick }: UserMenuProps) {
   const [open, setOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -23,12 +24,19 @@ export function UserMenu({ email, onSignOut }: UserMenuProps) {
 
   const initial = email.charAt(0).toUpperCase()
 
+  function handleSignOut() {
+    if (window.confirm('Tem certeza que deseja sair?')) {
+      onSignOut()
+      setOpen(false)
+    }
+  }
+
   return (
     <div className={styles.wrapper} ref={menuRef}>
       <button
         className={styles.avatarBtn}
         onClick={() => setOpen((o) => !o)}
-        aria-label="Menu do usuario"
+        aria-label="Menu do usuário"
       >
         <span className={styles.avatar}>{initial}</span>
       </button>
@@ -37,9 +45,17 @@ export function UserMenu({ email, onSignOut }: UserMenuProps) {
         <div className={styles.dropdown}>
           <p className={styles.email}>{email}</p>
           <hr className={styles.divider} />
+          {onFavoritesClick && (
+            <button
+              className={styles.menuItem}
+              onClick={() => { onFavoritesClick(); setOpen(false) }}
+            >
+              Meus Favoritos
+            </button>
+          )}
           <button
             className={styles.menuItem}
-            onClick={() => { onSignOut(); setOpen(false) }}
+            onClick={handleSignOut}
           >
             Sair
           </button>

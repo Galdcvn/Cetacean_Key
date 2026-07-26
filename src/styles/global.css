@@ -171,7 +171,53 @@ body {
 
 @media (max-width: 900px) {
   .scrollTopBtn {
-    bottom: 24px;
+    bottom: 80px;
     right: 24px;
+  }
+}
+
+.welcomeBanner {
+  background: var(--color-primary);
+  color: white;
+  padding: 12px 24px;
+}
+
+.welcomeContent {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.welcomeText {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.welcomeDismiss {
+  border: 1.5px solid rgba(255,255,255,0.4);
+  background: transparent;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-family);
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+
+.welcomeDismiss:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+@media (max-width: 600px) {
+  .welcomeContent {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
 }

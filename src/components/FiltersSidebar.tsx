@@ -1,5 +1,7 @@
+import { useEffect, useCallback } from 'react'
 import { CaracteristicaComOpcoes, AnimalComCaracteristicas } from '../types/cetacean'
 import { FilterGroup } from './FilterGroup'
+import { useToast } from './Toast'
 import styles from './FiltersSidebar.module.css'
 
 interface FiltersSidebarProps {
@@ -10,6 +12,7 @@ interface FiltersSidebarProps {
   allAnimals: AnimalComCaracteristicas[]
   isOpen: boolean
   onClose: () => void
+  loading?: boolean
 }
 
 function countAnimalsPerOption(animals: AnimalComCaracteristicas[]): Map<number, number> {
@@ -30,25 +33,62 @@ export function FiltersSidebar({
   allAnimals,
   isOpen,
   onClose,
+  loading = false,
 }: FiltersSidebarProps) {
   const hasActiveFilters = selectedOptions.length > 0
   const optionCounts = countAnimalsPerOption(allAnimals)
+  const { showToast } = useToast()
 
-  return (
-    <>
-      <aside className={styles.sidebar}>
-        <div className={styles.sidebarHeader}>
-          <h2 className={styles.sidebarTitle}>Filtros</h2>
-          {selectedOptions.length > 0 && (
-            <span className={styles.badge}>{selectedOptions.length}</span>
-          )}
-          {hasActiveFilters && (
-            <button className={styles.clearBtn} onClick={onReset}>
-              Limpar
-            </button>
-          )}
+  const handleReset = useCallback(() => {
+    if (hasActiveFilters) {
+      showToast(`${selectedOptions.length} filtro(s) removido(s).`, 'info')
+    }
+    onReset()
+  }, [hasActiveFilters, selectedOptions.length, onReset, showToast])
+
+  useEffect(() => {
+    if (!isOpen) return
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
+
+  const loadingContent = (
+    <div className={styles.groups}>
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className={styles.skeletonGroup}>
+          <div className={styles.skeletonTitle} />
+          {Array.from({ length: 3 }).map((_, j) => (
+            <div key={j} className={styles.skeletonOption} />
+          ))}
         </div>
+      ))}
+    </div>
+  )
 
+  const filterNote = (
+    <p className={styles.logicNote}>
+      Filtros de grupos diferentes são combinados com E (interseção).
+    </p>
+  )
+
+  const sidebarContent = (
+    <>
+      <div className={styles.sidebarHeader}>
+        <h2 className={styles.sidebarTitle}>Filtros</h2>
+        {selectedOptions.length > 0 && (
+          <span className={styles.badge}>{selectedOptions.length}</span>
+        )}
+        {hasActiveFilters && (
+          <button className={styles.clearBtn} onClick={handleReset}>
+            Limpar
+          </button>
+        )}
+      </div>
+
+      {loading ? loadingContent : (
         <div className={styles.groups}>
           {caracteristicas.map((carac) => (
             <FilterGroup
@@ -60,7 +100,16 @@ export function FiltersSidebar({
               optionCounts={optionCounts}
             />
           ))}
+          {filterNote}
         </div>
+      )}
+    </>
+  )
+
+  return (
+    <>
+      <aside className={styles.sidebar}>
+        {sidebarContent}
       </aside>
 
       <div
@@ -75,7 +124,7 @@ export function FiltersSidebar({
           )}
           <div className={styles.drawerHeaderActions}>
             {hasActiveFilters && (
-              <button className={styles.clearBtn} onClick={onReset}>
+              <button className={styles.clearBtn} onClick={handleReset}>
                 Limpar
               </button>
             )}
@@ -88,16 +137,21 @@ export function FiltersSidebar({
         </div>
         <div className={styles.drawerScroll}>
           <div className={styles.groups}>
-            {caracteristicas.map((carac) => (
-              <FilterGroup
-                key={carac.id_caract}
-                nome={carac.nome}
-                opcoes={carac.opcoes_caracteristica}
-                selectedIds={selectedOptions}
-                onToggle={onToggle}
-                optionCounts={optionCounts}
-              />
-            ))}
+            {loading ? loadingContent : (
+              <>
+                {caracteristicas.map((carac) => (
+                  <FilterGroup
+                    key={carac.id_caract}
+                    nome={carac.nome}
+                    opcoes={carac.opcoes_caracteristica}
+                    selectedIds={selectedOptions}
+                    onToggle={onToggle}
+                    optionCounts={optionCounts}
+                  />
+                ))}
+                {filterNote}
+              </>
+            )}
           </div>
         </div>
       </div>

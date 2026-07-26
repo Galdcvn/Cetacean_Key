@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react'
 import type { User } from '@supabase/supabase-js'
 import { AnimalComCaracteristicas } from '../types/cetacean'
+import { FavoriteButton } from './FavoriteButton'
 import { DistributionMap } from './DistributionMap'
 import styles from './AnimalDetailModal.module.css'
 
 interface AnimalDetailModalProps {
   animal: AnimalComCaracteristicas
   selectedOptions: number[]
+  allAnimals?: AnimalComCaracteristicas[]
   onClose: () => void
+  onSelectAnimal?: (animal: AnimalComCaracteristicas) => void
   user: User | null
   isFavorited: boolean
   onToggleFavorito: () => void
@@ -15,7 +18,7 @@ interface AnimalDetailModalProps {
 }
 
 export function AnimalDetailModal({
-  animal, selectedOptions, onClose,
+  animal, selectedOptions, allAnimals, onClose, onSelectAnimal,
   user, isFavorited, onToggleFavorito, onLoginClick,
 }: AnimalDetailModalProps) {
   const [imgError, setImgError] = useState(false)
@@ -50,6 +53,14 @@ export function AnimalDetailModal({
 
   const subordemNome = animal.subordens?.nome ?? '—'
 
+  let prevAnimal: AnimalComCaracteristicas | undefined
+  let nextAnimal: AnimalComCaracteristicas | undefined
+  if (allAnimals && onSelectAnimal) {
+    const idx = allAnimals.findIndex((a) => a.id_animal === animal.id_animal)
+    if (idx > 0) prevAnimal = allAnimals[idx - 1]
+    if (idx < allAnimals.length - 1) nextAnimal = allAnimals[idx + 1]
+  }
+
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -75,20 +86,15 @@ export function AnimalDetailModal({
             <span className={styles.metaItem}>{subordemNome}</span>
           </div>
 
-          <button
-            className={`${styles.favBtn} ${isFavorited ? styles.favActive : ''}`}
-            onClick={() => {
-              if (user) onToggleFavorito()
-              else onLoginClick()
-            }}
-          >
-            <svg viewBox="0 0 24 24" fill={isFavorited ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-            </svg>
-            {user
-              ? isFavorited ? 'Remover dos favoritos' : 'Adicionar aos favoritos'
-              : 'Entre para favoritar'}
-          </button>
+          <FavoriteButton
+            isFavorited={isFavorited}
+            disabled={!user}
+            onClick={user ? onToggleFavorito : onLoginClick}
+            label={!user ? 'Faça login para favoritar' : undefined}
+          />
+          {!user && (
+            <p className={styles.favHint}>Faça login para favoritar</p>
+          )}
         </div>
 
         <div className={styles.body}>
@@ -111,6 +117,35 @@ export function AnimalDetailModal({
             </div>
           ))}
         </div>
+
+        {(prevAnimal || nextAnimal) && (
+          <div className={styles.navBar}>
+            {prevAnimal ? (
+              <button
+                className={styles.navBtn}
+                onClick={() => onSelectAnimal!(prevAnimal!)}
+                aria-label={`Espécie anterior: ${prevAnimal!.nome_comum}`}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 16, height: 16 }}>
+                  <path d="M15 18l-6-6 6-6" />
+                </svg>
+                {prevAnimal!.nome_comum}
+              </button>
+            ) : <span />}
+            {nextAnimal ? (
+              <button
+                className={styles.navBtn}
+                onClick={() => onSelectAnimal!(nextAnimal!)}
+                aria-label={`Próxima espécie: ${nextAnimal!.nome_comum}`}
+              >
+                {nextAnimal!.nome_comum}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 16, height: 16 }}>
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+              </button>
+            ) : <span />}
+          </div>
+        )}
       </div>
     </div>
   )

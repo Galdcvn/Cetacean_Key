@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { AuthError } from '@supabase/supabase-js'
 import styles from './AuthModal.module.css'
 
@@ -15,10 +15,15 @@ interface AuthModalProps {
 function translateError(message: string): string {
   const translations: Record<string, string> = {
     'Invalid login credentials': 'Email ou senha incorretos.',
-    'User already registered': 'Este email ja esta cadastrado.',
+    'User already registered': 'Este email já está cadastrado.',
     'Password should be at least 6 characters': 'A senha deve ter pelo menos 6 caracteres.',
-    'Unable to validate email address: invalid format': 'Formato de email invalido.',
-    'Email not confirmed': 'Email ainda nao foi confirmado. Verifique sua caixa de entrada.',
+    'Unable to validate email address: invalid format': 'Formato de email inválido.',
+    'Email not confirmed': 'Email ainda não foi confirmado. Verifique sua caixa de entrada.',
+    'Signup requires a valid password': 'Senha inválida.',
+    'Email rate limit exceeded': 'Muitas tentativas. Aguarde alguns minutos.',
+    'For security purposes, you can only request this once every 60 seconds': 'Por segurança, aguarde 60 segundos.',
+    'Invalid email or password': 'Email ou senha incorretos.',
+    'Signup is disabled': 'O cadastro está temporariamente desabilitado.',
   }
   return translations[message] ?? `Erro: ${message}`
 }
@@ -29,6 +34,23 @@ export function AuthModal({ mode, onLogin, onRegister, onClose, onSwitchMode }: 
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [onClose])
+
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        onClose()
+      }, 3000)
+      return () => clearTimeout(timer)
+    }
+  }, [success, onClose])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -64,7 +86,7 @@ export function AuthModal({ mode, onLogin, onRegister, onClose, onSwitchMode }: 
         <p className={styles.subtitle}>
           {mode === 'login'
             ? 'Entre para salvar seus favoritos.'
-            : 'Crie uma conta para salvar seus cetaceos favoritos.'}
+            : 'Crie uma conta para salvar seus cetáceos favoritos.'}
         </p>
 
         <form className={styles.form} onSubmit={handleSubmit}>
@@ -88,17 +110,20 @@ export function AuthModal({ mode, onLogin, onRegister, onClose, onSwitchMode }: 
               className={styles.input}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Minimo 6 caracteres"
+              placeholder="Mínimo 6 caracteres"
               required
               minLength={6}
               autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
             />
+            {mode === 'register' && (
+              <span className={styles.hint}>Mínimo de 6 caracteres</span>
+            )}
           </label>
 
           {error && <p className={styles.error}>{error}</p>}
           {success && (
             <p className={styles.success}>
-              Conta criada com sucesso! Voce ja pode fazer login.
+              Conta criada com sucesso! Você já pode fazer login.
             </p>
           )}
 
@@ -110,14 +135,14 @@ export function AuthModal({ mode, onLogin, onRegister, onClose, onSwitchMode }: 
         <p className={styles.switchText}>
           {mode === 'login' ? (
             <>
-              Nao tem conta?{' '}
+              Não tem conta?{' '}
               <button className={styles.switchBtn} onClick={onSwitchMode}>
                 Criar conta
               </button>
             </>
           ) : (
             <>
-              Ja tem conta?{' '}
+              Já tem conta?{' '}
               <button className={styles.switchBtn} onClick={onSwitchMode}>
                 Entrar
               </button>
