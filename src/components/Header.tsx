@@ -37,25 +37,6 @@ export function Header({
     <header className={styles.header}>
       <div className={styles.inner}>
         <div className={styles.topBar}>
-          <img src={logoSvg} alt="Cetacean Key" className={styles.logo} />
-
-          <div className={styles.userArea}>
-            {loadingAuth ? (
-              <div className={styles.authSkeleton} />
-            ) : user ? (
-              <UserMenu email={user.email ?? ''} onSignOut={onSignOut} />
-            ) : (
-              <div className={styles.authButtons}>
-                <button className={styles.loginBtn} onClick={onLoginClick}>
-                  Entrar
-                </button>
-                <button className={styles.registerBtn} onClick={onRegisterClick}>
-                  Criar conta
-                </button>
-              </div>
-            )}
-          </div>
-
           <button
             className={styles.themeBtn}
             onClick={onToggleTheme}
@@ -79,6 +60,25 @@ export function Header({
               </svg>
             )}
           </button>
+
+          <img src={logoSvg} alt="Cetacean Key" className={styles.logo} />
+
+          <div className={styles.userArea}>
+            {loadingAuth ? (
+              <div className={styles.authSkeleton} />
+            ) : user ? (
+              <UserMenu email={user.email ?? ''} onSignOut={onSignOut} />
+            ) : (
+              <div className={styles.authButtons}>
+                <button className={styles.loginBtn} onClick={onLoginClick}>
+                  Entrar
+                </button>
+                <button className={styles.registerBtn} onClick={onRegisterClick}>
+                  Criar conta
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className={styles.searchWrapper}>
