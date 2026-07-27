@@ -79,21 +79,16 @@ export function useFilteredAnimais(
     })
   }, [allAnimals, selectedOptions])
 
-  const [debouncedQuery, setDebouncedQuery] = useState(searchQuery)
+  const [results, setResults] = useState<AnimalComCaracteristicas[]>([])
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
   useEffect(() => {
     clearTimeout(debounceRef.current)
     debounceRef.current = setTimeout(() => {
-      setDebouncedQuery(searchQuery)
+      setResults(smartSearchAnimals(filteredByOptions, searchQuery))
     }, 200)
     return () => clearTimeout(debounceRef.current)
-  }, [searchQuery])
-
-  const results = useMemo(
-    () => smartSearchAnimals(filteredByOptions, debouncedQuery),
-    [filteredByOptions, debouncedQuery]
-  )
+  }, [filteredByOptions, searchQuery])
 
   return { results, loading, error, totalCount: allAnimals.length }
 }
