@@ -1,9 +1,7 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, Suspense, lazy } from 'react'
 import { Header } from './components/Header'
 import { FiltersSidebar } from './components/FiltersSidebar'
 import { AnimalCards } from './components/AnimalCards'
-import { AnimalDetailModal } from './components/AnimalDetailModal'
-import { AuthModal } from './components/AuthModal'
 import { ToastProvider } from './components/Toast'
 import { useFiltros } from './hooks/useFiltros'
 import { useCaracteristicas } from './hooks/useCaracteristicas'
@@ -12,6 +10,9 @@ import { useTheme } from './hooks/useTheme'
 import { useAuth } from './hooks/useAuth'
 import { useFavorites } from './hooks/useFavorites'
 import type { AnimalComCaracteristicas } from './types/cetacean'
+
+const AnimalDetailModal = lazy(() => import('./components/AnimalDetailModal').then(m => ({ default: m.AnimalDetailModal })))
+const AuthModal = lazy(() => import('./components/AuthModal').then(m => ({ default: m.AuthModal })))
 
 type AuthMode = 'login' | 'register'
 
@@ -143,30 +144,34 @@ function AppInner() {
       </button>
 
       {selectedAnimal && (
-        <AnimalDetailModal
-          animal={selectedAnimal}
-          selectedOptions={selectedOptions}
-          allAnimals={results}
-          onClose={() => setSelectedAnimal(null)}
-          onSelectAnimal={setSelectedAnimal}
-          user={user}
-          isFavorited={isFavorited(selectedAnimal.id_animal)}
-          onToggleFavorito={() => toggleFavorito(selectedAnimal.id_animal)}
-          onLoginClick={() => setAuthModal('login')}
-        />
+        <Suspense fallback={null}>
+          <AnimalDetailModal
+            animal={selectedAnimal}
+            selectedOptions={selectedOptions}
+            allAnimals={results}
+            onClose={() => setSelectedAnimal(null)}
+            onSelectAnimal={setSelectedAnimal}
+            user={user}
+            isFavorited={isFavorited(selectedAnimal.id_animal)}
+            onToggleFavorito={() => toggleFavorito(selectedAnimal.id_animal)}
+            onLoginClick={() => setAuthModal('login')}
+          />
+        </Suspense>
       )}
 
       {authModal && (
-        <AuthModal
-          mode={authModal}
-          onLogin={signIn}
-          onRegister={signUp}
-          onGoogleLogin={signInWithGoogle}
-          onClose={() => setAuthModal(null)}
-          onSwitchMode={() =>
-            setAuthModal((prev) => (prev === 'login' ? 'register' : 'login'))
-          }
-        />
+        <Suspense fallback={null}>
+          <AuthModal
+            mode={authModal}
+            onLogin={signIn}
+            onRegister={signUp}
+            onGoogleLogin={signInWithGoogle}
+            onClose={() => setAuthModal(null)}
+            onSwitchMode={() =>
+              setAuthModal((prev) => (prev === 'login' ? 'register' : 'login'))
+            }
+          />
+        </Suspense>
       )}
     </div>
   )
