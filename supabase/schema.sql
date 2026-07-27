@@ -20,8 +20,7 @@ CREATE TABLE animais (
     FOREIGN KEY (id_subordem) REFERENCES subordens(id_subordem)
 );
 
--- Para banco existente, rode:
--- ALTER TABLE animais ADD COLUMN url_imagem TEXT;
+CREATE INDEX idx_animais_subordem ON animais(id_subordem);
 
 -- 3. Tabela com as perguntas da chave
 CREATE TABLE caracteristicas (
@@ -38,6 +37,8 @@ CREATE TABLE opcoes_caracteristica (
     FOREIGN KEY (id_caract) REFERENCES caracteristicas(id_caract)
 );
 
+CREATE INDEX idx_opcoes_caract ON opcoes_caracteristica(id_caract);
+
 -- 5. Tabela de cruzamento (Muitos-para-Muitos)
 CREATE TABLE animal_identificacao (
     id_animal INT NOT NULL,
@@ -47,6 +48,8 @@ CREATE TABLE animal_identificacao (
     FOREIGN KEY (id_animal) REFERENCES animais(id_animal) ON DELETE CASCADE,
     FOREIGN KEY (id_opcao) REFERENCES opcoes_caracteristica(id_opcao) ON DELETE CASCADE
 );
+
+CREATE INDEX idx_animal_ident_opcao ON animal_identificacao(id_opcao);
 
 -- 6. Tabela de favoritos (por usuario)
 CREATE TABLE favoritos (
@@ -60,9 +63,34 @@ CREATE TABLE favoritos (
 CREATE INDEX idx_favoritos_user ON favoritos(user_id);
 CREATE INDEX idx_favoritos_animal ON favoritos(id_animal);
 
+-- ============================================
 -- RLS
+-- ============================================
+
+-- Tabelas públicas: leitura liberada para todos
+ALTER TABLE subordens ENABLE ROW LEVEL SECURITY;
+ALTER TABLE animais ENABLE ROW LEVEL SECURITY;
+ALTER TABLE caracteristicas ENABLE ROW LEVEL SECURITY;
+ALTER TABLE opcoes_caracteristica ENABLE ROW LEVEL SECURITY;
+ALTER TABLE animal_identificacao ENABLE ROW LEVEL SECURITY;
 ALTER TABLE favoritos ENABLE ROW LEVEL SECURITY;
 
+CREATE POLICY "Leitura publica"
+  ON subordens FOR SELECT USING (true);
+
+CREATE POLICY "Leitura publica"
+  ON animais FOR SELECT USING (true);
+
+CREATE POLICY "Leitura publica"
+  ON caracteristicas FOR SELECT USING (true);
+
+CREATE POLICY "Leitura publica"
+  ON opcoes_caracteristica FOR SELECT USING (true);
+
+CREATE POLICY "Leitura publica"
+  ON animal_identificacao FOR SELECT USING (true);
+
+-- Favoritos: apenas o proprio usuario
 CREATE POLICY "Usuarios leem apenas seus proprios favoritos"
   ON favoritos FOR SELECT USING (auth.uid() = user_id);
 
@@ -71,3 +99,6 @@ CREATE POLICY "Usuarios inserem apenas seus proprios favoritos"
 
 CREATE POLICY "Usuarios deletam apenas seus proprios favoritos"
   ON favoritos FOR DELETE USING (auth.uid() = user_id);
+
+CREATE POLICY "Usuarios atualizam apenas seus proprios favoritos"
+  ON favoritos FOR UPDATE USING (auth.uid() = user_id);
