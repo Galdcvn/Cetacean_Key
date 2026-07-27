@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabase'
+import { useToast } from '../components/Toast'
 import type { User } from '@supabase/supabase-js'
 
 export interface UseFavoritesReturn {
@@ -10,6 +11,7 @@ export interface UseFavoritesReturn {
 }
 
 export function useFavorites(user: User | null): UseFavoritesReturn {
+  const { showToast } = useToast()
   const [favoritos, setFavoritos] = useState<Set<number>>(new Set())
   const [loading, setLoading] = useState(false)
 
@@ -93,9 +95,7 @@ export function useFavorites(user: User | null): UseFavoritesReturn {
       }
 
       if (failed) {
-        window.dispatchEvent(new CustomEvent('app-toast', {
-          detail: { message: 'Erro ao salvar favorito. Tente novamente.', type: 'error' },
-        }))
+        showToast('Erro ao salvar favorito. Tente novamente.', 'error')
       }
     },
     [user, favoritos]

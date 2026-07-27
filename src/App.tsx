@@ -4,7 +4,7 @@ import { FiltersSidebar } from './components/FiltersSidebar'
 import { AnimalCards } from './components/AnimalCards'
 import { AnimalDetailModal } from './components/AnimalDetailModal'
 import { AuthModal } from './components/AuthModal'
-import { ToastProvider, useToast } from './components/Toast'
+import { ToastProvider } from './components/Toast'
 import { useFiltros } from './hooks/useFiltros'
 import { useCaracteristicas } from './hooks/useCaracteristicas'
 import { useFilteredAnimais } from './hooks/useFilteredAnimais'
@@ -39,17 +39,6 @@ function AppInner() {
   const [showWelcome, setShowWelcome] = useState(() => {
     return !localStorage.getItem('cetacean_welcome_dismissed')
   })
-
-  const { showToast } = useToast()
-
-  useEffect(() => {
-    function handleAppToast(e: Event) {
-      const detail = (e as CustomEvent).detail
-      showToast(detail.message, detail.type)
-    }
-    window.addEventListener('app-toast', handleAppToast)
-    return () => window.removeEventListener('app-toast', handleAppToast)
-  }, [showToast])
 
   const handleScroll = useCallback(() => {
     setShowScrollTop(window.scrollY > 300)
