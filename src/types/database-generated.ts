@@ -15,6 +15,7 @@ export interface Database {
           id_subordem?: number
           nome?: string
         }
+        Relationships: []
       }
       animais: {
         Row: {
@@ -41,6 +42,15 @@ export interface Database {
           id_subordem?: number
           url_imagem?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "animais_id_subordem_fkey"
+            columns: ["id_subordem"]
+            isOneToOne: false
+            referencedRelation: "subordens"
+            referencedColumns: ["id_subordem"]
+          }
+        ]
       }
       caracteristicas: {
         Row: {
@@ -58,6 +68,7 @@ export interface Database {
           nome?: string
           grupo_anatomico?: string
         }
+        Relationships: []
       }
       opcoes_caracteristica: {
         Row: {
@@ -75,6 +86,15 @@ export interface Database {
           id_caract?: number
           valor?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "opcoes_caracteristica_id_caract_fkey"
+            columns: ["id_caract"]
+            isOneToOne: false
+            referencedRelation: "caracteristicas"
+            referencedColumns: ["id_caract"]
+          }
+        ]
       }
       animal_identificacao: {
         Row: {
@@ -92,6 +112,22 @@ export interface Database {
           id_opcao?: number
           observacao?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "animal_identificacao_id_animal_fkey"
+            columns: ["id_animal"]
+            isOneToOne: false
+            referencedRelation: "animais"
+            referencedColumns: ["id_animal"]
+          },
+          {
+            foreignKeyName: "animal_identificacao_id_opcao_fkey"
+            columns: ["id_opcao"]
+            isOneToOne: false
+            referencedRelation: "opcoes_caracteristica"
+            referencedColumns: ["id_opcao"]
+          }
+        ]
       }
       favoritos: {
         Row: {
@@ -112,6 +148,15 @@ export interface Database {
           id_animal?: number
           criado_em?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "favoritos_id_animal_fkey"
+            columns: ["id_animal"]
+            isOneToOne: false
+            referencedRelation: "animais"
+            referencedColumns: ["id_animal"]
+          }
+        ]
       }
     }
     Views: Record<string, never>

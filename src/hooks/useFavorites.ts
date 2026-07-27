@@ -26,13 +26,13 @@ export function useFavorites(user: User | null): UseFavoritesReturn {
     async function fetchFavoritos() {
       setLoading(true)
       const { data, error } = await supabase
-        .from('favoritos' as never)
+        .from('favoritos')
         .select('id_animal')
         .eq('user_id', userId)
 
       if (!cancelled) {
         if (!error && data) {
-          setFavoritos(new Set((data as { id_animal: number }[]).map((f) => f.id_animal)))
+          setFavoritos(new Set(data.map((f) => f.id_animal)))
         }
         setLoading(false)
       }
@@ -64,7 +64,7 @@ export function useFavorites(user: User | null): UseFavoritesReturn {
 
       if (isCurrentlyFav) {
         const { error } = await supabase
-          .from('favoritos' as never)
+          .from('favoritos')
           .delete()
           .eq('user_id', user.id)
           .eq('id_animal', idAnimal)
@@ -79,8 +79,8 @@ export function useFavorites(user: User | null): UseFavoritesReturn {
         }
       } else {
         const { error } = await supabase
-          .from('favoritos' as never)
-          .insert({ user_id: user.id, id_animal: idAnimal } as never)
+          .from('favoritos')
+          .insert({ user_id: user.id, id_animal: idAnimal })
 
         if (error) {
           failed = true
